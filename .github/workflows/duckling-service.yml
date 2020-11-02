@@ -12,11 +12,12 @@ jobs:
         # Maps port 8000 on service container to the host
         - 8000:8000
         # Set health checks to wait until duckling has started
-#        options: >-
-#          --health-cmd "curl http://localhost:8000/"
-#          --health-interval 10s
-#          --health-timeout 5s
-#          --health-retries 5
+        # https://blog.couchbase.com/docker-health-check-keeping-containers-healthy/
+        options: >-
+          --health-cmd "curl --fail http://localhost:8000/ || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
     - uses: actions/checkout@v1
