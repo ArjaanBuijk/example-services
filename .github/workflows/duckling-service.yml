@@ -1,0 +1,27 @@
+name: duckling service on VM
+on: [pull_request]
+
+jobs:
+  vm-job:
+    runs-on: ubuntu-latest
+
+    services:
+      duckling:
+        image: rasa/duckling
+        ports:
+        # Maps port 8000 on service container to the host
+        - 8000:8000
+        # Set health checks to wait until duckling has started
+        options: >-
+          --health-cmd "curl http://localhost:8000/"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: run a health check
+      run: |
+        sleep 60
+        curl -X GET http://localhost:8000/
